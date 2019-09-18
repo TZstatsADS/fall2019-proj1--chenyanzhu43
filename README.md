@@ -1,20 +1,22 @@
 # Applied Data Science @ Columbia
 ## Fall 2019
-## Project 1: A "data story" on the songs of our times
+## Project 1: A song lyrics analysis
 
-<img src="figs/title1.jpeg" width="500">
+![ ](https://github.com/chenyanzhu43/proj1/blob/master/figs/lyrics.jpg)
 
-### [Project Description](doc/)
-This is the first and only *individual* (as opposed to *team*) this semester. 
+### [Project Description](https://github.com/chenyanzhu43/proj1/blob/master/doc)
+
+This is the first and only individual (as opposed to team) this semester.
 
 Term: Fall 2019
 
-+ Projec title: Lorem ipsum dolor sit amet
-+ This project is conducted by [your name]
++ Project title: 'A song lyrics analysis'
 
-+ Project summary: [a short summary] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ This project is conducted by Yanzhu Chen
 
-Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
++ Project summary: This report is a song lyrics analysis on word performance. I process the raw textual data 'lyrics.csv' saved in data file by tokenizing, removing stopwords, and creating a tidy version of text 'processed_lyrics.csv' saved in output file. When hear a song, the melody is always the first impression we have on it. For different genres of songs, the melodies seem to be quite distinct. While I'm curious about words variability of lyrics. Is the lyrics as changebale as melody, or on the opposite, immutable at core significant level?  I try to answer this question in general and in timeline from the given collection of song lyrics.
+
+Follwing [suggestions](https://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](https://nicercode.github.io/about/#Team) (@richfitz). This folder is organized as follows.
 
 ```
 proj/
@@ -23,6 +25,6 @@ proj/
 ├── doc/
 ├── figs/
 └── output/
-```
+``` 
 
 Please see each subfolder for a README file.

@@ -4,21 +4,28 @@ output:
   html_document
 ---
 
-![ ](/Users/yanzhuchen/Desktop/lyrics.jpg)
+
+
+![ ](../figs/lyrics.jpg)
+
 
 #### This report is a song lyrics analysis on word performance
 
 #### The raw dataset: lyrics is a filtered corpus of 100,000+ song lyrics from MetroLyrics. You can find the complete 380,000+ song lyrics data on Kaggle.
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 This report may require the latest R version to view:
+
 
 ```{r}
 print(R.version)
 ```
+
 
 ```{r, message=FALSE, warning=FALSE,echo=FALSE}
 packages.used <- c('tm','tidytext','tidyverse','DT','wordcloud','topicmodels')
@@ -44,7 +51,7 @@ library(topicmodels)
 
 ```{r read data, warning=FALSE, echo=FALSE, message=FALSE}
 #import data to be cleaned and processed
-load("/Users/yanzhuchen/Desktop/lyrics.RData")
+load("../data/lyrics.RData")
 ```
 
 ```{r text processing in tm, warning=FALSE, echo=FALSE, message=FALSE}
@@ -114,29 +121,32 @@ completed <- completed %>%
   ungroup()
 ```
 
-```{r cleaned dt_lyrics, warning=FALSE, message=FALSE}
+```{r cleaned dt_lyrics, warning=FALSE, echo=FALSE, message=FALSE}
 #keeping a track of the processed lyrics with their own ID
 dt_lyrics <- dt_lyrics %>%
   mutate(id = row_number()) %>%
   inner_join(completed)
 ```
 
-```{r export data}
+```{r export data, warning=FALSE, echo=FALSE, message=FALSE}
 #exporting the processed text data into a CSV file
-write_csv(dt_lyrics, "/Users/yanzhuchen/Desktop/processed_lyrics.csv")
+write_csv(dt_lyrics, "../output/processed_lyrics.csv")
 ```
 
 
 To start, I process the raw textual data 'lyrics.csv' by tokenizing, removing stopwords, and creating a tidy version of text.
 
+
 ```{r, message=FALSE, echo=FALSE}
 #load dataset
-lyrics <- read_csv('/Users/yanzhuchen/Desktop/processed_lyrics.csv')
+lyrics <- read_csv('../output/processed_lyrics.csv')
 ```
 
-When hear a song, the melody is always the first impression we have on it. For different genres of songs, the melodies seem to be quite distinct. While I'm curious about words variability of lyrics. Is the lyrics as changebale as melody, or on the opposite, immutable in core significant level? 
 
-I tried to answer this question in general and in timeline from the given collection of song lyrics.
+When hear a song, the melody is always the first impression we have on it. For different genres of songs, the melodies seem to be quite distinct. While I'm curious about words variability of lyrics. Is the lyrics as changebale as melody, or on the opposite, immutable at core significant level? 
+
+I try to answer this question in general and in timeline from the given collection of song lyrics.
+
 
 ```{r tokenize, warning=FALSE, echo=FALSE, message=FALSE}
 #tokenize
@@ -144,7 +154,9 @@ lyrics_data <- lyrics %>%
   unnest_tokens(word, stemmedwords)
 ```
 
-####In general
+
+#### In general
+
 
 ```{r word frequency, warning=FALSE, echo=FALSE, message=FALSE}
 lyrics_data %>%
@@ -153,7 +165,9 @@ lyrics_data %>%
   top_n(30,n)
 ```
 
+
 In total without any filtering, I can see from above table that 'love', 'time', 'youre', 'baby', and 'ill' are top 5 words to be mentioned in lyrics. And I visualize the result with word cloud.
+
 
 ```{r visulization, warning=FALSE, echo=FALSE, message=FALSE}
 #visulization
@@ -168,7 +182,9 @@ wordcloud(
 )
 ```
 
+
 Then I filter dataset into different genres, and select the 4 largest genre groups to do analysis.
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 #find out the top 4 large group of genres
@@ -178,7 +194,9 @@ lyrics_data %>%
   top_n(4,n)
 ```
 
+
 The 4 largest genre groups of the dataset are Rock, Hip-Hop, Pop, Metal.
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 lyric_data_top <- lyrics_data %>%
@@ -191,6 +209,7 @@ word_count_top <- lyric_data_top %>%
   mutate(word2 = fct_reorder(word, n))
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 ggplot(word_count_top, aes(x = word, y = n, fill = genre))+
   geom_col(show.legend=FALSE)+
@@ -201,6 +220,7 @@ ggplot(word_count_top, aes(x = word, y = n, fill = genre))+
     x = 'Words',
     y = 'Count')
 ```
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 bag_rock <- lyrics_data %>%
@@ -232,6 +252,7 @@ word_count_metal <- bag_metal %>%
   arrange(desc(n))
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 wordcloud(
   words = word_count_rock$word,
@@ -240,6 +261,7 @@ wordcloud(
   colors = 'red'
 )
 ```
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 wordcloud(
@@ -250,6 +272,7 @@ wordcloud(
 )
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 wordcloud(
   words = word_count_pop$word,
@@ -259,6 +282,7 @@ wordcloud(
 )
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 wordcloud(
   words = word_count_metal$word,
@@ -267,6 +291,7 @@ wordcloud(
   colors = 'orange'
 )
 ```
+
 
 For Hip-Hop, 'love', 'shit', 'ya', 'yo', 'girl', 'baby', 'bitch', etc, are the most populor collection of words. Modal particles take an part that cannot be overlooked and indicate a strong emotional expression.
 
@@ -278,12 +303,15 @@ For Rock, 'mind', 'time', 'ill', 'day', 'life', etc, are the most popular collec
 
 To summarize, these four genres all have high frequencies for 'youre', which means they use the second person to sing, and this  allows writer to submerge the reader into the narrative completely. Besides, 'love' and 'life' both perform high frequencies in each subset, and this agrees with word performance in general; I conjecture that regardless of how wonderful or disappointed the love or life is, people always take care of the theme because lyrics draws similar moments and feelings everyone resonants with.
 
-####In timeline
+
+#### In timeline
+
 
 ```{r}
 lyrics_data %>%
   count(year)
 ```
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 #filter dataset into three time stages
@@ -292,7 +320,9 @@ dt_middle <- lyrics_data[ (lyrics_data$year < 2000) & (lyrics_data$year > 1984),
 dt_late <- lyrics_data[lyrics_data$year >1999, ]
 ```
 
+
 Since there are 48 years except the two earliest, I divide the dataset into three time stages. the early stage is before 1985, the middle stage is between 1985 and 2000, the late stage is after 2000.
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 #sentiment analysis
@@ -303,7 +333,9 @@ sentiment_early <- dt_early %>%
 sentiment_early
 ```
 
+
 In the above table, I use 'nrc' to do a sentiment analysis. 'nrc' lexicon categorizes words in a binary fashion into categories of positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust. By looking at the counts under each columns in the table, it's easy to figure out what kind of emotions is most widely used in lyrics creation. 
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 position <- which.max(
@@ -312,7 +344,9 @@ position <- which.max(
 position
 ```
 
+
 For example, Country music tend to use positive words in lyrics before year 1985.
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 sentiment_middle <- dt_middle %>%
@@ -322,6 +356,7 @@ sentiment_middle <- dt_middle %>%
 sentiment_middle
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 position <- which.max(
   sentiment_middle[sentiment_middle$genre == 'Country', ]
@@ -329,7 +364,9 @@ position <- which.max(
 position
 ```
 
+
 The most frequently used words are still positive between year 1968 and 2000.
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 sentiment_late <- dt_late %>%
@@ -339,6 +376,7 @@ sentiment_late <- dt_late %>%
 sentiment_late
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 position <- which.max(
   sentiment_late[sentiment_late$genre == 'Country', ]
@@ -346,9 +384,11 @@ position <- which.max(
 position
 ```
 
+
 Country music keeps using postive words until year 2016.
 
 I make an assumption here that the collection of words faintly change through time based on sentiment. To verify my assumption, I initially visualize the word cloud for each stage.
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 count_early <- dt_early %>%
@@ -364,6 +404,7 @@ count_late <- dt_late %>%
   arrange(desc(n))
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 wordcloud(
   words = count_early$word,
@@ -372,6 +413,7 @@ wordcloud(
   colors = 'purple'
 )
 ```
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 wordcloud(
@@ -382,6 +424,7 @@ wordcloud(
 )
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 wordcloud(
   words = count_late$word,
@@ -391,7 +434,9 @@ wordcloud(
 )
 ```
 
+
 It seems not bad from the word cloud. However, a more scientific topics modeling is better for this situation.
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 #lda topics modeling for early stage
@@ -427,6 +472,7 @@ ggplot(
   coord_flip()
 ```
 
+
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 #lda topics modeling for middle stage
 
@@ -460,6 +506,7 @@ ggplot(
   facet_wrap(~topic, scales = 'free') +
   coord_flip()
 ```
+
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 #lda topics modeling for late stage
@@ -495,9 +542,14 @@ ggplot(
   coord_flip()
 ```
 
+
+Latent Dirichlet allocation (LDA) is a particularly popular method for fitting a topic model. It treats each document as a mixture of topics, and each topic as a mixture of words. This allows documents to “overlap” each other in terms of content, rather than being separated into discrete groups, in a way that mirrors typical use of natural language.
+
 Looking at the topics modeling above, I find that the topics for early stage and middle stage are distributed very similar, while for late stage, the ranking of top words change, even though the collection remains the same; it seems like love story is definitely the most important topic before year 2000, compared to recent years that time topic weight more and modal particles add. 
 
+
 #### Conclusion
+
 
 By analyzing the song lyrics data on word performance, I come up with the following results.
 
@@ -505,9 +557,12 @@ By analyzing the song lyrics data on word performance, I come up with the follow
 
 + Collection of words in song lyrics do not change obviously in various time stages, which indicates similar emotional expression.
 
-![ ](/Users/yanzhuchen/Desktop/love.jpg)
+
+![ ](../figs/love.jpg)
+
 
 #### References
+
 
 https://www.liveabout.com/what-is-heavy-metal-p2-2456255
 
